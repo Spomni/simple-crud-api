@@ -3,21 +3,18 @@ function getActualSiblings(child, shifting) {
   let actualShifting = 0
   let actualChild = child
   let actualParent = Object.getPrototypeOf(child)
-
-  if (actualParent) {
-    let nextParent;
-  
-    while (actualShifting < shifting) {
+  let nextParent;
     
-      nextParent = Object.getPrototypeOf(actualParent)
+  while (actualShifting < shifting) {
   
-      if (nextParent) {
-        actualChild = actualParent
-        actualParent = nextParent
-        actualShifting += 1
-      } else {
-        actualShifting = shifting
-      }
+    nextParent = Object.getPrototypeOf(actualParent)
+    
+    if (nextParent) {
+      actualChild = actualParent
+      actualParent = nextParent
+      actualShifting += 1
+    } else {
+      actualShifting = shifting
     }
   }
   
@@ -32,10 +29,7 @@ function chainPrototype(child, newParent, shifting = 0) {
   } = getActualSiblings(child, shifting)
 
   Object.setPrototypeOf(actualChild, newParent)
-  
-  if (actualParent) {
-    Object.setPrototypeOf(newParent, actualParent)
-  }
+  Object.setPrototypeOf(newParent, actualParent)
   
   return child
 }
