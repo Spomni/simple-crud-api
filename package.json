@@ -4,7 +4,7 @@
   "description": "task number 3 of the rss-nodejs-2021q4",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/Spomni/simple-crud-api/issues"
   },
-  "homepage": "https://github.com/Spomni/simple-crud-api#readme"
+  "homepage": "https://github.com/Spomni/simple-crud-api#readme",
+  "devDependencies": {
+    "jest": "^27.3.1"
+  }
 }
