@@ -30,12 +30,14 @@ function chainPrototype(child, newParent, shifting = 0) {
     actualChild,
     actualParent
   } = getActualSiblings(child, shifting)
-  
+
   Object.setPrototypeOf(actualChild, newParent)
   
   if (actualParent) {
     Object.setPrototypeOf(newParent, actualParent)
   }
+  
+  return child
 }
 
 module.exports = {
