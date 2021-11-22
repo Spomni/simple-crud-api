@@ -3,7 +3,7 @@ function createRouterFunction() {
   chainPrototype(router, Router.prototype)
 }
 
-class Router {
+class Router extends EventEmmiter {
 
   constructor() {
     this._routes = {}
@@ -30,7 +30,7 @@ class Router {
       const useRequest = createRequest(req, { mountPoint })
       use(useRequest, res)
     } else {
-      view.pageNotFound(req, res)
+      this.emit('error', new UnresolvedRequestError(req))
     }
   }
 }
