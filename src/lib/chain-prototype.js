@@ -18,7 +18,7 @@ function getActualSiblings(child, shifting) {
     }
   }
   
-  return { actualChild, actualParent}
+  return { actualChild, actualParent }
 }
 
 function chainPrototype(child, newParent, shifting = 0) {
@@ -29,8 +29,7 @@ function chainPrototype(child, newParent, shifting = 0) {
   } = getActualSiblings(child, shifting)
 
   Object.setPrototypeOf(actualChild, newParent)
-  Object.setPrototypeOf(newParent, actualParent)
-  
+
   return child
 }
 

@@ -31,18 +31,6 @@ describe('chain-prototype', () => {
 
       expect(proto).toBe(parent)
     })
-    
-    it('should not lose original prototype', function () {
-      const child = {}
-      const parent = { parent: 'i am' }
-      const originalProto = Object.getPrototypeOf(child)
-      
-      chainPrototype(child, parent)
-
-      const parentProto = Object.getPrototypeOf(parent)
-      
-      expect(parentProto).toBe(originalProto)
-    })
 
     it('should add parent as prototype of original proto with number shifting plus one', function () {
 
@@ -56,19 +44,6 @@ describe('chain-prototype', () => {
       const proto = Object.getPrototypeOf(siblings[shifting])
       
       expect(proto).toBe(parent)
-    })
-
-    it('should not lose original prototype chain', function () {
-      const siblings = [{}, {}, {}, {}, {}]
-      const child = createPrototypeChain(...siblings)
-      const parent = {}
-      const shifting = 2
-      
-      chainPrototype(child, parent, shifting)
-      
-      const proto = Object.getPrototypeOf(parent)
-      
-      expect(proto).toBe(siblings[shifting + 1])
     })
 
     it('should add parent as last prototype in chain if shifting options is greater than cain length', function () {
