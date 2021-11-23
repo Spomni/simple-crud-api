@@ -21,7 +21,7 @@ function getActualSiblings(child, shifting) {
   return { actualChild, actualParent }
 }
 
-function chainPrototype(child, newParent, shifting = 0) {
+function chainPrototype(child, newParent, shifting = 0, { inject = false } = {}) {
 
   const {
     actualChild,
@@ -29,6 +29,11 @@ function chainPrototype(child, newParent, shifting = 0) {
   } = getActualSiblings(child, shifting)
 
   Object.setPrototypeOf(actualChild, newParent)
+
+  // TODO: test this branch
+  if (inject) {
+    Object.setPrototypeOf(newParent, actualParent)
+  }
 
   return child
 }
