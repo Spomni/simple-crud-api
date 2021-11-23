@@ -42,7 +42,7 @@ class Request {
   }
 }
 
-function createRequest(parent, { mountPoint } = {}) {
+function createRequest(parent, { mountPoint }) {
   return new Request(parent, { mountPoint })
 }
 
