@@ -16,10 +16,6 @@ function isFunction(value) {
   return typeof value === 'function'
 }
 
-function escape(string) {
-  return string.replace(/[-\/\.\?]/g, '\\$&')
-}
-
 class Router {
 
   constructor() {
