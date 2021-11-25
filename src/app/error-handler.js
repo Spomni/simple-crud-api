@@ -1,3 +1,4 @@
+const { isUnresolvedRequestError } = require('../contract/unresolved-request-error')
 const { resourceNotFoundView } = require('./view/resource-not-found')
 const { internalServerErrorView } = require('./view/internal-server-error')
 
@@ -16,5 +17,5 @@ function handleError(req, res, error) {
 }
 
 module.exports = {
-  handleError()
+  handleError,
 }
