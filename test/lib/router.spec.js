@@ -1,9 +1,11 @@
-const { createRouter, Router } = require('../../src/lib/router')
+const { createRouter, Router, setErrorHandler } = require('../../src/lib/router')
 const { Request } = require('../../src/lib/request')
 
 const {
   UnresolvedRequestError
 } = require('../../src/contract/unresolved-request-error')
+
+const handleError = jest.fn()
 
 describe('router', () => {
 
@@ -186,6 +188,86 @@ describe('router', () => {
         expect(useReq.mountPoint).toBe(request.mountPoint + route.path)
         expect(useRes).toBe(response)
       })
+    })
+  })
+  
+  describe('setErrorHandler()', () => {
+  
+    beforeAll(() => setErrorHandler(handleError))
+  
+    it('should setup Router constructor to use passed function to handle errors', () => {
+      const router = createRouter()
+      const req = { url: '/some/path' }
+      const res = {}
+      
+      router(req, res)
+      
+      expect(handleError).toHaveBeenCalled()
+    })
+    
+    it('should setup constructor to apply handler to new instances only', () => {
+
+      const router = createRouter()
+      const req = { url: '/some/path' }
+      const res = {}
+
+      setErrorHandler(() => {
+        throw new Error('test')
+      })
+      handleError.mockClear()
+
+      expect(() => router(req, res)).not.toThrow()
+      expect(handleError).toHaveBeenCalled()
+
+      setErrorHandler(handleError)
+    })
+
+    it('error handler should be called to handle UnresolvedRequestError', () => {
+      const router = createRouter()
+      const req = { url: '/some/path' }
+      const res = {}
+      
+      handleError.mockClear()
+      
+      router(req, res)
+      
+      expect(handleError).toHaveBeenCalled()
+    })
+
+    it('error handler should be called to handle errors of the use callback', () => {
+      const path = '/some/path'
+      const error = new Error('test')
+      const use = () => { throw error }
+      const req = { url: path }
+      const res = {}
+      
+      const router = createRouter()
+      
+      router.register({ path, use })
+      
+      const callRouter = () => router(req, res)
+      handleError.mockClear()
+      
+      expect(callRouter).not.toThrow()
+      expect(handleError).toHaveBeenCalled()
+    })
+
+    it('error handler should receive request, response and error as arguments', () => {
+      const path = '/some/path'
+      const error = new Error('test')
+      const use = () => { throw error }
+      const req = { url: path }
+      const res = {}
+      
+      const router = createRouter()
+      
+      router.register({ path, use })
+      
+      const callRouter = () => router(req, res)
+      handleError.mockClear()
+      
+      expect(callRouter).not.toThrow()
+      expect(handleError).toHaveBeenCalledWith(req, res, error)
     })
   })
 })
