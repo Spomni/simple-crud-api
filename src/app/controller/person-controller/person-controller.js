@@ -1,7 +1,7 @@
-const { UnresolvedRequestError } = require('../../../contract/unresolved-request-error')
+const { notImplementedView } = require('../../view/501-not-implemented-view')
 
-const { addPerson } = require('./add-person')
 const { getPerson } = require('./get-person')
+const { addPerson } = require('./add-person')
 const { updatePerson } = require('./update-person')
 const { deletePerson } = require('./delete-person')
 
@@ -20,10 +20,6 @@ function resolveRequestMethod(req) {
 function personController(req, res) {
 
   const { path } = req
-
-  if (/^\/.+/.test(path)) {
-    throw new UnresolvedRequestError(req)
-  }
 
   const handleRequest = resolveRequestMethod(req)
 
