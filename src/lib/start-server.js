@@ -1,5 +1,5 @@
 const { createServer } = require('http')
-const dotenv = require('./dotenv')
+const dotenv = require('dotenv')
 const { createApp } = require('../app')
 
 dotenv.config()

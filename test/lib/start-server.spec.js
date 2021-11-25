@@ -5,9 +5,7 @@ jest.mock('http', () => {
   return { createServer: createServerMock }
 })
 
-jest.mock('../../src/lib/dotenv', () => {
-  return { config: jest.fn() }
-})
+jest.mock('dotenv')
 
 jest.mock('../../src/app', () => {
   return { createApp: jest.fn() }
@@ -16,7 +14,7 @@ jest.mock('../../src/app', () => {
 jest.spyOn(console, 'log')
 
 const { createServer } = require('http')
-const dotenv = require('../../src/lib/dotenv')
+const dotenv = require('dotenv')
 const { startServer } = require('../../src/lib/start-server')
 const { createApp } = require('../../src/app')
 
