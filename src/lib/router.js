@@ -16,11 +16,19 @@ function isFunction(value) {
   return typeof value === 'function'
 }
 
+function defaultErrorHandler(req, res, error) {
+  throw error
+}
+
+let errorHandler = defaultErrorHandler
+
 class Router {
 
   constructor() {
     const router = createRouterFunction()
     router._routes = {}
+    router._handleError = errorHandler
+
     return router
   }
 
@@ -51,13 +59,21 @@ class Router {
 
     const route = this._getRoute(req.path || req.url)
 
-    if (!route) throw new UnresolvedRequestError(req)
+    if (!route) {
+      this._handleError(req, res, new UnresolvedRequestError(req))
+      return
+    }
 
     const reqOfUse = createRequest(req, { mountPoint: route.path })
   
-    route.use(reqOfUse, res)
+    try {
+      route.use(reqOfUse, res)
+    } catch (error) {
+      this._handleError(req, res, error)
+      return
+    }
   }
-  
+
   _getRoute(path) {
     const routes = Object.values(this._routes)
 
@@ -72,7 +88,12 @@ function createRouter(...args) {
   return new Router(...args)
 }
 
+function setErrorHandler(handler) {
+  errorHandler = handler
+}
+
 module.exports = {
   Router,
   createRouter,
+  setErrorHandler,
 }
