@@ -1,6 +1,20 @@
-module.exports = {
+const { resourceNotFoundView } = require('./view/resource-not-found')
+const { internalServerErrorView } = require('./view/internal-server-error')
 
-  handleError() {
-    throw new Error('it is not implemented')
+function handleError(req, res, error) {
+
+  if (isUnresolvedRequestError(error)) {
+    resourceNotFoundView(req, res)
+    return
   }
+
+  internalServerErrorView(req, res)
+
+  if (process.env.NODE_ENV === 'development') {
+    console.error(error)
+  }
+}
+
+module.exports = {
+  handleError()
 }
