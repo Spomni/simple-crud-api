@@ -1,8 +1,10 @@
 const { setErrorHandler, createRouter } = require('../lib/router')
-
-setErrorHandler(handleError)
+const { handleError } = require('./error-handler')
+const { personController } = require('./controller/person-controller')
 
 function createApp() {
+
+  setErrorHandler(handleError)
 
   const app = createRouter()
   
