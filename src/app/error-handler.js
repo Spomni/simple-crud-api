@@ -1,6 +1,6 @@
-const { isUnresolvedRequestError } = require('../contract/unresolved-request-error')
-const { resourceNotFoundView } = require('./view/resource-not-found')
-const { internalServerErrorView } = require('./view/internal-server-error')
+const {isUnresolvedRequestError } = require('../contract/unresolved-request-error')
+const { resourceNotFoundView } = require('./view/404-resource-not-found-view')
+const { internalServerErrorView } = require('./view/500-internal-server-error-view')
 
 function handleError(req, res, error) {
 

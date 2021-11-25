@@ -1,10 +1,10 @@
-jest.mock('../../src/app/view/internal-server-error')
-jest.mock('../../src/app/view/resource-not-found')
+jest.mock('../../src/app/view/500-internal-server-error-view')
+jest.mock('../../src/app/view/404-resource-not-found-view')
 
 const { UnresolvedRequestError } = require('../../src/contract/unresolved-request-error')
 const { handleError } = require('../../src/app/error-handler')
-const { internalServerErrorView } = require('../../src/app/view/internal-server-error')
-const { resourceNotFoundView } = require('../../src/app/view/resource-not-found')
+const { internalServerErrorView } = require('../../src/app/view/500-internal-server-error-view')
+const { resourceNotFoundView } = require('../../src/app/view/404-resource-not-found-view')
 
 const { mockProcessEnv } = require('../__helpers/mock-process-env')
 
