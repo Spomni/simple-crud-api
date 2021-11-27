@@ -164,6 +164,18 @@ describe('request', () => {
         await expect(request.readBody()).resolves.toBe(body)
         await expect(request.readBody()).resolves.toBe(body)
       });
+
+      it('should be rejected if a request emit "error" event', async () => {
+        const parent = new ParentRequest()
+        const request = createRequest(parent, { mountPoint: '/' })
+
+        const promise = request.readBody()
+
+        const error = new Error('test error')
+        parent.emit('error', error)
+
+        expect(promise).rejects.toBe(error)
+      })
     });
   })
 })

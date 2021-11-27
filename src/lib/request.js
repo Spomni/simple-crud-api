@@ -6,21 +6,6 @@ function doesStartWith(string, part) {
   return re.test(string)
 }
 
-async function readRequestBody(req) {
-  return new Promise((resolve, reject) => {
-
-    let buffer = Buffer.from([])
-
-    req.on('data', (data) => {
-      buffer = Buffer.concat([buffer, data])
-    })
-
-    req.on('end', () => {
-      resolve(buffer.toString())
-    });
-  })
-}
-
 class Request {
 
   constructor(parent, { mountPoint }) {
