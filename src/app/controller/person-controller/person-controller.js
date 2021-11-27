@@ -1,3 +1,5 @@
+const { handleError } = require('../../error-handler')
+
 const { notImplementedView } = require('../../view/501-not-implemented-view')
 
 const { getPerson } = require('./get-person')
@@ -29,8 +31,7 @@ function personController(req, res) {
   }
 
   handleRequest(req, res)
-    throw new Error('it is not implemented')
-    //.catch((error) => handleError(error))
+    .catch((error) => handleError(error))
 }
 
 module.exports = {
