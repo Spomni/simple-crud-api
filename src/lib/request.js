@@ -47,7 +47,6 @@ class Request {
       .replace(mountPoint, '')  // remove mountPoint
       .replace(/((\?)|(\/\?)).*$/, '') // remove query and trailing slash
 
-    throw new Error('it is not implemented')
     this._body = null
   }
 
@@ -60,30 +59,31 @@ class Request {
   }
 
   async readBody() {
-    throw new Error('it is not implemented')
-    if (!this._body) {
-      await this._readBody()
-    }
-
-    return this._body.toString()
+    const body = await this._readBody()
+    return body.toString()
   }
 
   async _readBody() {
-    throw new Error('it is not implemented')
     return new Promise((resolve, reject) => {
 
-      this._body = Buffer._from([])
+      if (this._body) {
+        resolve(this._body)
 
-      req.on('error', (error) => {
-        this._body = null
-        reject(error)
-      })
+      } else {
 
-      req.on('end', () => resolve());
+        this._body = Buffer.from([])
 
-      req.on('data', (data) => {
-        this._body = Buffer.concat([this._body, data])
-      })
+        this.on('error', (error) => {
+          this._body = null
+          reject(error)
+        })
+
+        this.on('end', () => resolve(this._body));
+
+        this.on('data', (data) => {
+          this._body = Buffer.concat([this._body, data])
+        })
+      }
     })
   }
 }
