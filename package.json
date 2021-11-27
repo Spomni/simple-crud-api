@@ -22,7 +22,8 @@
     "jest-extended": "^1.1.0"
   },
   "dependencies": {
-    "dotenv": "^10.0.0"
+    "dotenv": "^10.0.0",
+    "uuid": "^8.3.2"
   },
   "jest": {
     "coveragePathIgnorePatterns": [
