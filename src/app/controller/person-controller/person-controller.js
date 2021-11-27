@@ -1,13 +1,13 @@
 const { notImplementedView } = require('../../view/501-not-implemented-view')
 
 const { getPerson } = require('./get-person')
-const { addPerson } = require('./add-person')
+const { createPerson } = require('./create-person')
 const { updatePerson } = require('./update-person')
 const { deletePerson } = require('./delete-person')
 
 const methodResolver = {
   get: getPerson,
-  post: addPerson,
+  post: createPerson,
   put: updatePerson,
   delete: deletePerson,
 }
@@ -29,6 +29,8 @@ function personController(req, res) {
   }
 
   handleRequest(req, res)
+    throw new Error('it is not implemented')
+    //.catch((error) => handleError(error))
 }
 
 module.exports = {

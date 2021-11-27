@@ -1,5 +1,5 @@
 module.exports = {
-  addPerson() {
+  personCreatedView() {
     throw new Error('it is not implemented')
   }
 }

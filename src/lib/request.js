@@ -6,18 +6,33 @@ function doesStartWith(string, part) {
   return re.test(string)
 }
 
+async function readRequestBody(req) {
+  return new Promise((resolve, reject) => {
+
+    let buffer = Buffer.from([])
+
+    req.on('data', (data) => {
+      buffer = Buffer.concat([buffer, data])
+    })
+
+    req.on('end', () => {
+      resolve(buffer.toString())
+    });
+  })
+}
+
 class Request {
 
   constructor(parent, { mountPoint }) {
-  
+
     if (!isMountPoint(mountPoint)) {
       throw new TypeError(`${mountPoint} is not valid mountPoint`)
     }
-    
+
     if (parent.mountPoint && mountPoint === '/') {
       throw new Error('new mountPoint must not be equal to parent one')
     }
-    
+
     chainPrototype(this, parent, 1)
 
     this._mountPoint = (parent.mountPoint && parent.mountPoint !== '/')
@@ -31,14 +46,45 @@ class Request {
     this._path = this.url
       .replace(mountPoint, '')  // remove mountPoint
       .replace(/((\?)|(\/\?)).*$/, '') // remove query and trailing slash
+
+    this._body = null
   }
 
   get mountPoint() {
     return this._mountPoint
   }
-  
+
   get path() {
     return this._path
+  }
+
+  async readBody() {
+    const body = await this._readBody()
+    return body.toString()
+  }
+
+  async _readBody() {
+    return new Promise((resolve, reject) => {
+
+      if (this._body) {
+        resolve(this._body)
+
+      } else {
+
+        this._body = Buffer.from([])
+
+        this.on('error', (error) => {
+          this._body = null
+          reject(error)
+        })
+
+        this.on('end', () => resolve(this._body));
+
+        this.on('data', (data) => {
+          this._body = Buffer.concat([this._body, data])
+        })
+      }
+    })
   }
 }
 
