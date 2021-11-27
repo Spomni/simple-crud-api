@@ -1,6 +1,5 @@
 module.exports = {
-
-  personController() {
+  personCreatedView() {
     throw new Error('it is not implemented')
-  },
+  }
 }
