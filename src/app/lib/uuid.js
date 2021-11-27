@@ -1,10 +1,10 @@
+const { v4, validate } = require('uuid')
+
+function generate() {
+  return v4()
+}
+
 module.exports = {
-
-  generate() {
-    throw new Error('it is not implemented')
-  },
-
-  validate() {
-    throw new Error('it is not implemented')
-  }
+  generate,
+  validate,
 }
