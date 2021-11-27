@@ -23,5 +23,13 @@
   },
   "dependencies": {
     "dotenv": "^10.0.0"
+  },
+  "jest": {
+    "coveragePathIgnorePatterns": [
+      "<rootDir>/test/"
+    ],
+    "setupFiles": [
+      "<rootDir>/test/__setup-test-env"
+    ]
   }
 }
