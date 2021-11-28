@@ -14,6 +14,7 @@ function startServer() {
 
   server.listen(port, host, () => {
     console.log(`Server is started and is listening on port ${port} of ${host}`)
+    console.log(`Server is started in the "${process.env.NODE_ENV}" mode`);
   })
 
   return server
