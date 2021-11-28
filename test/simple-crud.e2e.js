@@ -347,6 +347,22 @@ describe('simple-crud-api', () => {
         })
       });
 
+      it('should return status "400 Bad Request" if personId is invalid', (done) => {
+
+        request(server).put('/person/uuid')
+          .expect(400)
+          .end(done)
+      });
+
+      it('should return error message with body if response has status code 400', (done) => {
+
+        request(server).put('/person/uuid')
+          .expect((res) => {
+            expect(res.text).toMatch('invalid id')
+          })
+          .end(done)
+      });
+
       it('should return status "404 Not Found" if person with passed id is not found', (done) => {
 
         const id = uuid.generate()

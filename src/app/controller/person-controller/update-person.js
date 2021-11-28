@@ -16,9 +16,8 @@ async function updatePerson(req, res) {
   let person = null
 
   try {
-    personLike = JSON.parse(body)
-
     person = crud.person.getById(personId)
+    personLike = JSON.parse(body)
 
     if (!person) {
       resourceNotFoundView(req, res)
