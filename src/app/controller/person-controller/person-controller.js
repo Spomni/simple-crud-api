@@ -1,6 +1,7 @@
 const { handleError } = require('../../error-handler')
 
 const { notImplementedView } = require('../../view/501-not-implemented-view')
+const { resourceNotFoundView } = require('../../view/404-resource-not-found-view')
 
 const { getPerson } = require('./get-person')
 const { createPerson } = require('./create-person')
@@ -29,13 +30,14 @@ function personController(req, res) {
 
   if (chunks.length > 1) {
     resourceNotFoundView(req, res)
+    return null
   }
 
   const handleRequest = resolveRequestMethod(req)
 
   if (!handleRequest) {
     notImplementedView(req, res)
-    return
+    return null
   }
 
   handleRequest(req, res)
