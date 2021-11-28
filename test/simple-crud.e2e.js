@@ -429,6 +429,9 @@ describe('simple-crud-api', () => {
       request(server).post('/person')
         .send(defaultPersonLike)
         .expect(500)
+        .expect((res) => {
+          expect(res.text).toMatch('The server has encountered a situation it does not know how to handle.')
+        })
         .end((err) => {
           readBodyMock.mockReset()
           if (err) return done(err)

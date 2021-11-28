@@ -59,7 +59,9 @@ describe('404-resource-not-found-view', () => {
       internalServerErrorView(req, res)
 
       expect(res.write).not.toHaveBeenCalled()
-      expect(res.end).toHaveBeenCalledWith()
+
+      const body = res.end.mock.calls[0][0]
+      expect(body).toMatch('The server has encountered a situation it does not know how to handle')
     });
   });
 });
