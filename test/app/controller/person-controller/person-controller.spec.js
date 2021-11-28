@@ -2,7 +2,12 @@ function fromSrc(filename) {
   return global.testEnv.fromSrc(filename)
 }
 
+function fromTest(filename) {
+  return global.testEnv.fromTest(filename)
+}
+
 jest.mock(fromSrc('app/view/501-not-implemented-view'))
+jest.mock(fromSrc('app/view/404-resource-not-found-view'))
 jest.mock(fromSrc('app/controller/person-controller/get-person'), () => ({
   getPerson: jest.fn(() => Promise.resolve())
 }))
@@ -18,6 +23,7 @@ jest.mock(fromSrc('app/controller/person-controller/delete-person'), () => ({
 jest.mock(fromSrc('app/error-handler'))
 
 const { notImplementedView } = require(fromSrc('app/view/501-not-implemented-view'))
+const { resourceNotFoundView } = require(fromSrc('app/view/404-resource-not-found-view'))
 const { personController } = require(fromSrc('app/controller/person-controller'))
 const { getPerson } = require(fromSrc('app/controller/person-controller/get-person'))
 const { createPerson } = require(fromSrc('app/controller/person-controller/create-person'))
@@ -25,15 +31,36 @@ const { updatePerson } = require(fromSrc('app/controller/person-controller/updat
 const { deletePerson } = require(fromSrc('app/controller/person-controller/delete-person'))
 const { handleError } = require(fromSrc('app/error-handler'))
 
+const { ParentRequest } = require(fromTest('__helpers/parent-request'))
+const { createRequest } = require(fromSrc('lib/request'))
+
 describe('person-controller', () => {
 
   describe('personController()', () => {
 
-    beforeAll(() => jest.clearAllMocks())
+    beforeAll(() => jest.resetAllMocks())
+
+    it('should call resourceNotFoundView() if request path has more than on chunks', () => {
+
+      const url = '/person/uui/some/path'
+      const mountPoint = '/person'
+      const req = createRequest(new ParentRequest(url), { mountPoint })
+      const res = {}
+
+      const result = personController(req, res)
+
+      expect(result).toBe(null)
+      expect(resourceNotFoundView).toHaveBeenCalledWith(req, res)
+    });
 
     it('should call notImplementedView() if a request has not implemented method', () => {
 
-      const req = { method: 'CONNECT'}
+      const url = '/person/uui'
+      const mountPoint = '/person'
+      const req = createRequest(
+        new ParentRequest(url, 'CONNECT'),
+         { mountPoint }
+      )
       const res = {}
 
       personController(req, res)
@@ -43,8 +70,12 @@ describe('person-controller', () => {
 
     it('should call the getPerson() if a request method is "GET"', () => {
 
-      const req = { method: 'GET'}
+      const url = '/person/uuid'
+      const mountPoint = '/person'
+      const req = createRequest(new ParentRequest(url), { mountPoint })
       const res = {}
+
+      getPerson.mockImplementation(async () => {})
 
       personController(req, res)
 
@@ -53,8 +84,12 @@ describe('person-controller', () => {
 
     it('should call the createPerson() if a request method is "POST"', () => {
 
-      const req = { method: 'POST'}
+      const url = '/person/uuid'
+      const mountPoint = '/person'
+      const req = createRequest(new ParentRequest(url, 'POST'), { mountPoint })
       const res = {}
+
+      createPerson.mockImplementation(async () => {})
 
       personController(req, res)
 
@@ -63,8 +98,12 @@ describe('person-controller', () => {
 
     it('should call the updatePerson() if a request method is "PUT"', () => {
 
-      const req = { method: 'PUT'}
+      const url = '/person/uuid'
+      const mountPoint = '/person'
+      const req = createRequest(new ParentRequest(url, 'PUT'), { mountPoint })
       const res = {}
+
+      updatePerson.mockImplementation(async () => {})
 
       personController(req, res)
 
@@ -73,8 +112,12 @@ describe('person-controller', () => {
 
     it('should call the deletePerson() if a request method is "DELETE"', () => {
 
-      const req = { method: 'DELETE'}
+      const url = '/person/uuid'
+      const mountPoint = '/person'
+      const req = createRequest(new ParentRequest(url, 'DELETE'), { mountPoint })
       const res = {}
+
+      deletePerson.mockImplementation(async () => {})
 
       personController(req, res)
 
@@ -95,7 +138,9 @@ describe('person-controller', () => {
       for (let [method, mock] of fixture) {
         mock.mockImplementation(() => Promise.reject(error))
 
-        const req = { method }
+        const url = '/person/uuid'
+        const mountPoint = '/person'
+        const req = createRequest(new ParentRequest(url, method), { mountPoint })
         const res = {}
 
         personController(req, res)
