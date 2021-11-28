@@ -136,6 +136,8 @@ describe('simple-crud-api', () => {
 
     describe('POST /person', () => {
 
+      afterAll(() => clearStorage())
+
       it('should return status "201 Created"', (done) => {
 
         request(server)
@@ -228,20 +230,178 @@ describe('simple-crud-api', () => {
 
     describe('PUT /person/${personId}', () => {
 
-      it.todo('should return status "200 OK"');
-      it.todo('should return an object with person data');
-      it.todo('should works correct if passed object contains only one required property');
-      it.todo('should return status "400 Bad Request" if some required property is invalid');
-      it.todo('should return error message with body');
-      it.todo('should return status "404 Not Found" if person with passed id is not found');
+      afterAll(() => clearStorage())
+
+      it('should return status "200 OK"', () => {
+
+        const person = Object.assign({}, defaultPersonLike, {
+          id: uuid.generate()
+        })
+
+        storage.push(person)
+
+        const toUpdate = {
+          name: 'Max',
+          age: 13,
+          hobbies: ['Ping-Pong']
+        }
+
+        request(server).put(`/person/${person.id}`)
+          .send(toUpdate)
+          .expect(200)
+      });
+
+      it('should return an object with person data', (done) => {
+
+        const person = Object.assign({}, defaultPersonLike, {
+          id: uuid.generate()
+        })
+
+        storage.push(person)
+
+        const toUpdate = {
+          name: 'Max',
+          age: 13,
+          hobbies: ['Ping-Pong']
+        }
+
+        const expectedPerson = Object.assign({}, person, toUpdate)
+
+        request(server).put(`/person/${person.id}`)
+          .send(toUpdate)
+          .expect(200)
+          .expect('Content-Type', /json/)
+          .expect((res) => {
+            expect(res.body).toEqual(expectedPerson)
+          })
+          .end(done)
+      });
+
+      it('should works correct if passed object contains only one required property', (done) => {
+
+        const person = Object.assign({}, defaultPersonLike, {
+          id: uuid.generate()
+        })
+
+        storage.push(person)
+
+        const toUpdate = {
+          age: 13,
+        }
+
+        const expectedPerson = Object.assign({}, person, toUpdate)
+
+        request(server).put(`/person/${person.id}`)
+          .send(toUpdate)
+          .expect(200)
+          .expect('Content-Type', /json/)
+          .expect((res) => {
+            expect(res.body).toEqual(expectedPerson)
+          })
+          .end(done)
+      });
+
+      describe('should return status "400 Bad Request" if some required property is invalid', () => {
+
+        it.each([
+          ['invalid name', { name: ['Pit', 'Max'] }],
+          ['invalid age', { age: 'twenty one' }],
+          ['invalid hobbies', { hobbies: 'video games' }],
+        ])('%s', (caseName, extendWith, done) => {
+
+          const id = uuid.generate()
+
+          const person = Object.assign({}, defaultPersonLike, { id })
+
+          storage.push(person)
+
+          const toUpdate = Object.assign({}, extendWith)
+
+          request(server).put(`/person/${id}`)
+            .send(toUpdate)
+            .expect(400)
+            .end(done)
+        })
+      });
+
+      describe('should return error message with body', () => {
+
+        it.each([
+          ['invalid name', { name: ['Pit', 'Max'] }],
+          ['invalid age', { age: 'twenty one' }],
+          ['invalid hobbies', { hobbies: 'video games' }],
+        ])('%s', (caseName, extendWith, done) => {
+
+          const id = uuid.generate()
+          const person = Object.assign({}, defaultPersonLike, { id })
+          storage.push(person)
+
+          const toUpdate = Object.assign({}, extendWith)
+
+          request(server).put(`/person/${id}`)
+            .send(toUpdate)
+            .expect((res) => {
+              expect(res.text).toMatch(caseName)
+            })
+            .end(done)
+        })
+      });
+
+      it('should return status "404 Not Found" if person with passed id is not found', (done) => {
+
+        const id = uuid.generate()
+        const person = Object.assign({}, defaultPersonLike, { id })
+        storage.push(person)
+
+        const toUpdate = Object.assign({}, person)
+
+        request(server).put(`/person/${uuid.generate()}`)
+            .send(toUpdate)
+            .expect(404)
+            .end(done)
+      });
     });
 
     describe('DELETE /person/${personId}', () => {
 
-      it.todo('should return status "204 No Content"');
-      it.todo('should return status "400 Bad Request" if some required property is invalid');
-      it.todo('should return error message with body');
-      it.todo('should return status "404 Not Found" if person with passed id is not found');
+      beforeEach(() => fillStorage(3))
+      afterEach(() => clearStorage())
+
+      it('should return status "204 No Content"', (done) => {
+        const person = storage[0]
+
+        request(server).delete(`/person/${person.id}`)
+          .expect(204)
+          .expect((res) => {
+            const storedPerson = storage.find(({ id }) => id === person.id)
+            expect(storedPerson).toBe(undefined)
+          })
+          .end(done)
+      });
+
+      it('should return status "404 Not Found" if person with passed id is not found', (done) => {
+
+        request(server).delete(`/person/${uuid.generate()}`)
+          .expect(404)
+          .end(done)
+      });
+
+      it('should return status "400 Bad Request" if some required property is invalid', (done) => {
+
+        request(server).delete(`/person/uuid`)
+          .expect(400)
+          .end(done)
+      });
+
+
+      it('should return error message with body', (done) => {
+
+        request(server).delete(`/person/uuid`)
+          .expect((res) => {
+            expect(res.text).toMatch('invalid id')
+          })
+          .end(done)
+      });
     });
 
     it('should return status "500 Internal Server Error"', (done) => {
