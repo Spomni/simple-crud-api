@@ -26,59 +26,59 @@ describe('get-person', () => {
 
   describe('getPerson()', () => {
 
-    it('should call resourceNotFoundView() if path continues after the chunk "/personId"', () => {
+    it('should call resourceNotFoundView() if path continues after the chunk "/personId"', async () => {
       const req = { path: '/uuid/some'}
-      const result = getPerson(req, res)
+      const result = await getPerson(req, res)
       expect(resourceNotFoundView).toHaveBeenCalledWith(req, res)
       expect(result).toBe(null)
     });
 
-    it('should call personView() with an option "personList" containing a result of the crud.person.getAll() calling', () => {
+    it('should call personView() with an option "personList" containing a result of the crud.person.getAll() calling', async () => {
       const req = { path: '' }
       const data = []
       personApi.getAll.mockReturnValue(data)
-      const result = getPerson(req, res)
+      const result = await getPerson(req, res)
 
       expect(personView).toHaveBeenCalledWith(req, res, { personList: data })
       expect(result).toBe(data)
     });
 
-    it('should call invalidPersonIdView() if the path chunk "/personId" is invalid', () => {
+    it('should call invalidPersonIdView() if the path chunk "/personId" is invalid', async () => {
 
       const personId = 'not-uuid'
       const req = { path: `/${personId}` }
 
       uuid.validate.mockReturnValue(false)
 
-      const result = getPerson(req, res)
+      const result = await getPerson(req, res)
 
       expect(invalidPersonIdView).toHaveBeenCalledWith(req, res, { personId })
       expect(result).toBe(null)
     });
 
-    it('should call the crud.person.getById() method with passed personId', () => {
+    it('should call the crud.person.getById() method with passed personId', async () => {
       const personId = 'uuid'
       const req = { path: `/${personId}` }
-      const result = getPerson(req, res)
+      const result = await getPerson(req, res)
       expect(personApi.getById).toHaveBeenCalledWith(personId)
       expect(result).toBe(null)
     });
 
-    it('should call resourceNotFoundView() if a user with passed personId is not found', () => {
+    it('should call resourceNotFoundView() if a user with passed personId is not found', async () => {
       const req = { path: '/uuid' }
       personApi.getById.mockReturnValue(null)
-      const result = getPerson(req, res)
+      const result = await getPerson(req, res)
       expect(resourceNotFoundView).toHaveBeenCalledWith(req, res)
       expect(result).toBe(null)
     });
 
-    it('should call personView() with an option "person" containing a result of the crud.person.getById() calling', () => {
+    it('should call personView() with an option "person" containing a result of the crud.person.getById() calling', async () => {
       const req = { path: '/uuid' }
       const person = {}
 
       personApi.getById.mockReturnValue(person)
 
-      const result = getPerson(req, res)
+      const result = await getPerson(req, res)
 
       expect(personView).toHaveBeenCalledWith(req, res, { person })
       expect(result).toBe(person)
