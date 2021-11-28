@@ -1,11 +1,16 @@
-const { createStorage } = require('../storage')
+const  { storage } = require('../storage')
 const { createPerson } = require('../person')
-const { validate: isPersonId } = require('../../lib/uuid')
+const uuid = require('../../lib/uuid')
+const { validate: isPersonId } = uuid
 
-const storage = createStorage()
+class InvalidPersonIdError extends Error {
+  constructor(id) {
+    super(`invalid id "${id}" was found`)
+  }
+}
 
 function getAll() {
-  return storage.map((personLike) => createPerson(personLike))
+  return storage.map((personLike) => createPerson(personLike).toPlain())
 }
 
 function getById(id) {
@@ -14,24 +19,35 @@ function getById(id) {
     throw new InvalidPersonIdError(id)
   }
 
-  return storage.find((personLike) => personLike.id === id)
+  const personLike = storage.find((personLike) => personLike.id === id)
+
+  if (!personLike) return null
+
+  return createPerson(personLike).toPlain()
 }
 
 function create(personLike) {
-  const person = createPerson(personLike)
-  storage.push(person)
-  return createPerson(getById(person.id))
+  const id = uuid.generate()
+  const person = createPerson(Object.assign({}, personLike, { id }))
+  storage.push(person.toPlain())
+  return createPerson(getById(person.id)).toPlain()
 }
 
 function update(personLike) {
-  const person = getById(personLike.id)
 
-  if (!person) return null
+  const storedPersonLike = getById(personLike.id)
 
-  const stored = storage.find((item) => item.id === person.id)
-  Object.assign(stored, person)
+  if (!storedPersonLike) return null
 
-  return createPerson(getById(person.id))
+  const updatedPersonLike = Object.assign({}, storedPersonLike, personLike)
+
+  const person = createPerson(updatedPersonLike)
+
+  const personInStorage = storage.find((item) => item.id === person.id)
+
+  Object.assign(personInStorage, person)
+
+  return createPerson(getById(person.id)).toPlain()
 }
 
 function remove({ id }) {
