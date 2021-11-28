@@ -105,7 +105,7 @@ describe('person-controller', () => {
         try {
           const calls = handleError.mock.calls
 
-          calls.forEach(([rejected]) => {
+          calls.forEach(([req, res, rejected]) => {
             expect(rejected).toBe(error)
           })
 
