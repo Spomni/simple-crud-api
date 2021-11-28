@@ -6,6 +6,7 @@
   "scripts": {
     "test": "jest",
     "test:coverage": "jest --coverage",
+    "test:e2e": "jest --testMatch=**/*.e2e.js",
     "start:dev": "cross-env NODE_ENV=development nodemon src/index.js",
     "start:prod": "webpack && cross-env NODE_ENV=production node dist/main.js"
   },
@@ -21,8 +22,10 @@
   "homepage": "https://github.com/Spomni/simple-crud-api#readme",
   "devDependencies": {
     "@types/jest": "^27.0.3",
+    "@types/supertest": "^2.0.11",
     "jest": "^27.3.1",
-    "jest-extended": "^1.1.0"
+    "jest-extended": "^1.1.0",
+    "supertest": "^6.1.6"
   },
   "dependencies": {
     "cross-env": "^7.0.3",

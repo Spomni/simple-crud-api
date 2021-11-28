@@ -4,16 +4,18 @@ const { personDeletedView } = require('../../view/person-deleted-view')
 
 const crud = require('../../model/crud')
 
+function parsePath(path) {
+  return path.replace('/', '').split('/')
+}
+
+
 async function deletePerson(req, res) {
 
-  const body = await req.readBody()
-
+  const [ personId, nextChunk ] = parsePath(req.path)
   let person = null
 
   try {
-    personLike = JSON.parse(body)
-
-    person = crud.person.getById(personLike.id)
+    person = crud.person.getById(personId)
 
     if (!person) {
       resourceNotFoundView(req, res)

@@ -30,7 +30,11 @@ describe('update-person', () => {
 
     it('should call badRequestView() if a request body is not correct json string', async () => {
 
-      const req = createRequest(new ParentRequest(), { mountPoint: '/some' })
+      const url = '/person/uuid'
+      const mountPoint = '/person'
+
+      const req = createRequest(new ParentRequest(url), { mountPoint })
+
       const res = {}
 
       const body = '{ id: "uuid" }'
@@ -44,6 +48,8 @@ describe('update-person', () => {
 
       req.end(body)
 
+      uuid.validate.mockReturnValue(true)
+
       const person = await updatePerson(req, res)
 
       expect(badRequestView).toBeCalledWith(req, res, { message })
@@ -52,7 +58,10 @@ describe('update-person', () => {
 
     it('should call notFoundView() if person with passed id is not found', async () => {
 
-      const req = createRequest(new ParentRequest(), { mountPoint: '/some'} )
+      const url = '/person/uuid'
+      const mountPoint = '/person'
+
+      const req = createRequest(new ParentRequest(url), { mountPoint })
       const res = {}
       const body = JSON.stringify(defaultPersonLike)
       req.end(body)
@@ -104,7 +113,10 @@ describe('update-person', () => {
           uuid.validate.mockReturnValue(false)
         }
 
-        const req = createRequest(new ParentRequest(), { mountPoint: '/some'} )
+        const url = '/person/uuid'
+        const mountPoint = '/person'
+
+        const req = createRequest(new ParentRequest(url), { mountPoint })
         const body = JSON.stringify(personLike)
         const res = {}
         req.end(body)
@@ -121,7 +133,10 @@ describe('update-person', () => {
       personApi.getById.mockReturnValue(Object.assign({}, defaultPersonLike))
       personApi.update.mockReturnValue(Object.assign({}, defaultPersonLike))
 
-      const req = createRequest(new ParentRequest(), { mountPoint: '/some'} )
+      const url = '/person/uuid'
+      const mountPoint = '/person'
+
+      const req = createRequest(new ParentRequest(url), { mountPoint })
       const body = JSON.stringify(defaultPersonLike)
       const res = {}
       req.end(body)

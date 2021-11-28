@@ -31,7 +31,7 @@ function personController(req, res) {
   }
 
   handleRequest(req, res)
-    .catch((error) => handleError(error))
+    .catch((error) => handleError(req, res, error))
 }
 
 module.exports = {
