@@ -1,5 +1,9 @@
+const { personView } = require('./person-view')
+
+function personUpdatedView(req, res, { person }) {
+  personView(req, res, { person })
+}
+
 module.exports = {
-  personUpdatedView() {
-    throw new Error('it is not implemented')
-  }
+  personUpdatedView,
 }
