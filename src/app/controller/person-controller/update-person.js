@@ -4,16 +4,21 @@ const { personUpdatedView } = require('../../view/person-updated-view')
 
 const crud = require('../../model/crud')
 
+function parsePath(path) {
+  return path.replace('/', '').split('/')
+}
+
 async function updatePerson(req, res) {
 
-  const body = await req.readBody()
+  const [ personId, nextChunk ] = parsePath(req.path)
 
+  const body = await req.readBody()
   let person = null
 
   try {
     personLike = JSON.parse(body)
 
-    person = crud.person.getById(personLike.id)
+    person = crud.person.getById(personId)
 
     if (!person) {
       resourceNotFoundView(req, res)

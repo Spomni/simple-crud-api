@@ -45,7 +45,7 @@ function update(personLike) {
 
   const personInStorage = storage.find((item) => item.id === person.id)
 
-  Object.assign(personInStorage, person)
+  Object.assign(personInStorage, person.toPlain())
 
   return createPerson(getById(person.id)).toPlain()
 }

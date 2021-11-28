@@ -2,9 +2,9 @@ const { PassThrough } = require('stream')
 
 class ParentRequest extends PassThrough {
 
-  constructor() {
+  constructor(url = '/some/path/to') {
     super()
-    this.url = '/some/path/to'
+    this.url = url
   }
 }
 
