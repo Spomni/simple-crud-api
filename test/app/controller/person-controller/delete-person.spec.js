@@ -29,28 +29,6 @@ describe('delete-person', () => {
 
   describe('deletePerson()', () => {
 
-    it('should call badRequestView() if a request body is not correct json string', async () => {
-
-      const req = createRequest(new ParentRequest(), { mountPoint: '/some' })
-      const res = {}
-
-      const body = '{ id: "uuid" }'
-      let message = null
-
-      try {
-        message = JSON.parse(body)
-      } catch (error) {
-        message = error.message
-      }
-
-      req.end(body)
-
-      const result = await deletePerson(req, res)
-
-      expect(badRequestView).toBeCalledWith(req, res, { message })
-      expect(result).toBe(null)
-    });
-
     it('call notFoundView() if person with passed id is not found', async () => {
 
       const req = createRequest(new ParentRequest(), { mountPoint: '/some'} )
