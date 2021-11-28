@@ -50,6 +50,30 @@ npm run start:prod
 This command runs webpack to build an application and to put them into the `dist/` folder.<br>
 When building is completed the server will started from the build file `dist/main.js`.
 
+## Run Tests
+
+An apllication repository has four commands to test it.
+
+### Unit Tests
+```bash
+npm test
+```
+
+### Unit Tests With Coverage
+```bash
+npm run test:coverage
+```
+
+### E2E Tests
+```bash
+npm test:e2e
+```
+
+### Series of E2E Tests and Unit Tests With Coverage
+```bash
+npm test:full
+```
+
 ## Web API
 
 An application implement a very simple REST Like API that is reachable by url `http://${host}:${port}/person`.
