@@ -445,6 +445,10 @@ describe('simple-crud-api', () => {
 
       request(server).get(url)
         .expect(404)
+        .expect('content-type', /text/)
+        .expect((res) => {
+          expect(res.text).toMatch('resource is not found')
+        })
         .end(done)
     });
   });

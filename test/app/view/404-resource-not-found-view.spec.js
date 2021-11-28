@@ -52,14 +52,16 @@ describe('404-resource-not-found-view', () => {
       expect(contentType).toBe('text/plain; charset=UTF-8')
     });
 
-    it('should be ended without body', () => {
+    it('should be ended with human friendly message', () => {
       const req = {}
       const res = defaultResponse
 
       resourceNotFoundView(req, res)
 
       expect(res.write).not.toHaveBeenCalled()
-      expect(res.end).toHaveBeenCalledWith()
+
+      const body = res.end.mock.calls[0][0]
+      expect(body).toMatch('resource is not found')
     });
   });
 });
