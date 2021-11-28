@@ -3,9 +3,14 @@ expect.extend(matchers)
 
 const request = require('supertest')
 
+const { Request } = require('../src/lib/request')
+
+const readBodyMock = jest.spyOn(Request.prototype, 'readBody')
+jest.spyOn(console, 'log')
+
 const { startServer } = require('../src/lib/start-server')
-const uuid = require('../src/app/lib/uuid')
 const { storage } = require('../src/app/model/storage')
+const uuid = require('../src/app/lib/uuid')
 
 const server = startServer()
 
@@ -239,8 +244,45 @@ describe('simple-crud-api', () => {
       it.todo('should return status "404 Not Found" if person with passed id is not found');
     });
 
-    it.todo('should return status "500 Internal Server Error"');
-    it.todo('should works after internal server error');
-    it.todo('should return status "404 Not Found" if request to non-existent resource is passed');
+    it('should return status "500 Internal Server Error"', (done) => {
+
+      readBodyMock.mockImplementation(() => {
+        throw new Error('test error')
+      })
+
+      request(server).post('/person')
+        .send(defaultPersonLike)
+        .expect(500)
+        .end((err) => {
+          readBodyMock.mockReset()
+          if (err) return done(err)
+          done()
+        })
+
+    });
+
+    it('should works after internal server error', (done) => {
+
+      readBodyMock.mockImplementation(() => {
+        throw new Error('test error')
+      })
+
+      request(server).post('/person')
+        .send(defaultPersonLike)
+        .end((err) => {
+          readBodyMock.mockReset()
+
+          request(server).get('/person')
+            .expect(200)
+            .end(done)
+        })
+    });
+
+    it('should return status "404 Not Found" if request to non-existent resource is passed', (done) => {
+
+      request(server).get('/some/path')
+        .expect(404)
+        .end(done)
+    });
   });
 });
