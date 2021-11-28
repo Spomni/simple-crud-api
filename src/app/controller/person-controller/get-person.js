@@ -9,7 +9,7 @@ function parsePath(path) {
   return path.replace('/', '').split('/')
 }
 
-function getPerson(req, res) {
+async function getPerson(req, res) {
 
   const [ personId, nextChunk ] = parsePath(req.path)
 
