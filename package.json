@@ -6,7 +6,8 @@
   "scripts": {
     "test": "jest",
     "test:coverage": "jest --coverage",
-    "start:dev": "cross-env NODE_ENV=development nodemon src/index.js"
+    "start:dev": "cross-env NODE_ENV=development nodemon src/index.js",
+    "start:prod": "webpack && cross-env NODE_ENV=production node dist/main.js"
   },
   "repository": {
     "type": "git",
@@ -27,7 +28,9 @@
     "cross-env": "^7.0.3",
     "dotenv": "^10.0.0",
     "nodemon": "^2.0.15",
-    "uuid": "^8.3.2"
+    "uuid": "^8.3.2",
+    "webpack": "^5.64.4",
+    "webpack-cli": "^4.9.1"
   },
   "jest": {
     "coveragePathIgnorePatterns": [
