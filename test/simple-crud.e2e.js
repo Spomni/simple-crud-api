@@ -438,9 +438,12 @@ describe('simple-crud-api', () => {
         })
     });
 
-    it('should return status "404 Not Found" if request to non-existent resource is passed', (done) => {
+    it.each([
+      '/some/path',
+      '/person/uuid/some'
+    ])('should return status "404 Not Found" if request to non-existent resource "%s" is passed', (url, done) => {
 
-      request(server).get('/some/path')
+      request(server).get(url)
         .expect(404)
         .end(done)
     });
