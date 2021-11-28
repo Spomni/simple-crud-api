@@ -388,7 +388,7 @@ describe('simple-crud-api', () => {
 
         request(server).delete(`/person/${person.id}`)
           .expect(204)
-          .expect((res) => {
+          .expect(() => {
             const storedPerson = storage.find(({ id }) => id === person.id)
             expect(storedPerson).toBe(undefined)
           })
@@ -402,7 +402,7 @@ describe('simple-crud-api', () => {
           .end(done)
       });
 
-      it('should return status "400 Bad Request" if some required property is invalid', (done) => {
+      it('should return status "400 Bad Request" if person id is invalid', (done) => {
 
         request(server).delete(`/person/uuid`)
           .expect(400)
