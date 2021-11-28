@@ -14,6 +14,10 @@ const methodResolver = {
   delete: deletePerson,
 }
 
+function parsePath(path) {
+  return path.replace('/', '').split('/')
+}
+
 function resolveRequestMethod(req) {
   const method = req.method.toLowerCase()
   return methodResolver[method]
@@ -21,7 +25,11 @@ function resolveRequestMethod(req) {
 
 function personController(req, res) {
 
-  const { path } = req
+  const chunks = parsePath(req.path)
+
+  if (chunks.length > 1) {
+    resourceNotFoundView(req, res)
+  }
 
   const handleRequest = resolveRequestMethod(req)
 

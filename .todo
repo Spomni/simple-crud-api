@@ -2,3 +2,4 @@
 ☐ add validation layer to the person-controller/create-person module
 ☐ add message logging to explain starting mode
 ☐ add not found layer to personController
+☐ make deep refactoring of the modules crud and storage
