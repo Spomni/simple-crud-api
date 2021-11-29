@@ -7,9 +7,14 @@ Clone this repository to your device
 git clone https://github.com/Spomni/simple-crud-api.git
 ```
 
-Checkout to the created folder
+Go to the created folder
 ```bash
 cd simple-crud-api/
+```
+
+Checkout to the actual development branch
+```bash
+git checkout task-3/dev
 ```
 
 Install dependencies
@@ -19,8 +24,8 @@ npm i
 
 ## Start server
 
-An application can be started in two modes: development and production.<br>
-When server is starting an application will print message to the console. This message tells you which port, host and mode is used.<br>
+An application can be started in two modes: **development** and **production**.<br>
+When server is starting, an application will print message to the console. This message tells you which port, host and mode is used.<br>
 To stop server, terminate its process by pressing the keys combination `Ctrl+C`.
 
 ### Development mode
@@ -31,17 +36,11 @@ To start server in development mode, run the next command in the terminal.
 npm run start:dev
 ```
 
-Server wiil start from source files and all internal server errors will be printed to the console.
+Server will start from source files and all internal server errors will be printed to the console.
 
 ### Production mode
 
 To start server in production mode, run the next command in the terminal.
-
-### Setup Environment
-
-To setup port and host thats are used to listeninig server, you can edit `.env` file.<br>
-To read env file, an application use the `dotenv` module. Read its [documentation](https://github.com/motdotla/dotenv#readme) to know how to works with the `.env` file.<br>
-If an env file does not exist an application will be listening `localhost` on the port `3000`.
 
 ```bash
 npm run start:prod
@@ -50,9 +49,15 @@ npm run start:prod
 This command runs webpack to build an application and to put them into the `dist/` folder.<br>
 When building is completed the server will started from the build file `dist/main.js`.
 
+### Setup Environment
+
+To setup port and host thats are used to listen a server, you can add `.env` file.<br>
+To read env file, an application use the `dotenv` module. Read its [documentation](https://github.com/motdotla/dotenv#readme) to know how to works with the `.env` file.<br>
+If an env file does not exist an application will listen `localhost` on the port `3000`.
+
 ## Run Tests
 
-An apllication repository has four commands to test it.
+An application repository has four commands to test it.
 
 ### Unit Tests
 ```bash
@@ -66,12 +71,12 @@ npm run test:coverage
 
 ### E2E Tests
 ```bash
-npm test:e2e
+npm run test:e2e
 ```
 
 ### Series of E2E Tests and Unit Tests With Coverage
 ```bash
-npm test:full
+npm run test:full
 ```
 
 ## Web API
@@ -93,7 +98,7 @@ Persons are stored as `objects` that have following properties:
   * `name` — person's name (`string`, **required**)
   * `age` — person's age (`number`, **required**)
   * `hobbies` — person's hobbies (`array` of `strings` or empty `array`, **required**)
-  
+
 You need to pass a JSON object with all required properties to the `POST` method.<br>
 You can pass a JSON object with one or more required properties to the `PUT` method.<br>
 Other methods do not require any request body.
